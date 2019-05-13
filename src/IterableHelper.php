@@ -6,24 +6,20 @@ namespace Functional;
 /**
  * Class Helper for all iterable types
  *
- * @package UtilityBundle\Utils
+ * @package Functional
  */
-class IterableHelper
-{
-    public static function sequentialKeyFunc(int $start = 0): \Closure
-    {
+class IterableHelper {
+    public static function sequentialKeyFunc(int $start = 0): \Closure {
         $currentIteration = $start;
 
         return function () use (&$currentIteration) : int { return $currentIteration++; };
     }
 
-    public static function passThroughFunc(): \Closure
-    {
+    public static function passThroughFunc(): \Closure{
         return function ($key, $item) { return $item; };
     }
 
-    public static function simplePredicateFunc(bool $return): \Closure
-    {
+    public static function simplePredicateFunc(bool $return): \Closure{
         return function ($key, $item) use ($return) : bool { return $return; };
     }
 
@@ -31,13 +27,11 @@ class IterableHelper
      * @return \Closure
      * @see IterableHelper::toArray()
      */
-    public static function passThroughKeyFunc(): \Closure
-    {
+    public static function passThroughKeyFunc(): \Closure{
         return function ($key, $item) { return $key; };
     }
 
-    public static function sumReduceFunc(): \Closure
-    {
+    public static function sumReduceFunc(): \Closure{
         return function ($start, $key, $item) { return $start + $item; };
     }
 
@@ -50,8 +44,7 @@ class IterableHelper
      *
      * @return array
      */
-    public static function extractField(iterable $items, callable $columnFunc): array
-    {
+    public static function extractField(iterable $items, callable $columnFunc): array{
         $res = [];
         foreach ($items as $item) {
             $res[] = $columnFunc($item);
@@ -71,14 +64,14 @@ class IterableHelper
      *
      * @return \Generator
      */
-    public static function map(iterable $items, callable $mapFunc, bool $keepKey = true): \Generator
-    {
+    public static function map(iterable $items, callable $mapFunc, bool $keepKey = true): \Generator{
         if ($keepKey) {
             foreach ($items as $key => $item) {
                 yield $key => $mapFunc($key, $item);
             }
 
-        } else {
+        } 
+        else {
             foreach ($items as $key => $item) {
                 yield $mapFunc($key, $item);
             }
@@ -99,13 +92,13 @@ class IterableHelper
      *
      * biMap(
      *    $items,
-     *    \UtilityBundle\Utils\Functional\IterableVH::sequentialKeyFunc()
-     *    \UtilityBundle\Utils\Functional\IterableVH::passThroughFunc()
+     *    \Functional\IterableHelper::sequentialKeyFunc()
+     *    \Functional\IterableHelper::passThroughFunc()
      * )
      * </code>
      * it equivalent to call
      * <code>
-     * map($items, \UtilityBundle\Utils\Functional\IterableVH::passThroughFunc(), false)
+     * map($items, \Functional\IterableVH::passThroughFunc(), false)
      * </code>
      *
      * @param iterable $items
@@ -115,11 +108,10 @@ class IterableHelper
      * @param callable $itemFunc Function definition function($key, $item).
      *
      * @return \Generator
-     * @see \UtilityBundle\Utils\Functional\IterableHelper::passThroughFunc()
-     * @see \UtilityBundle\Utils\Functional\IterableHelper::sequentialKeyFunc()
+     * @see \Functional\IterableHelper::passThroughFunc()
+     * @see \Functional\IterableHelper::sequentialKeyFunc()
      */
-    public static function biMap(iterable $items, callable $keyFunc, callable $itemFunc): \Generator
-    {
+    public static function biMap(iterable $items, callable $keyFunc, callable $itemFunc): \Generator{
         foreach ($items as $key => $item) {
             $newKey  = $keyFunc($key, $item);
             $newItem = $itemFunc($key, $item);
@@ -138,8 +130,7 @@ class IterableHelper
      * @param callable $applyFunc Func definition function($key, $item). Should return false if no further processing
      *                            (applying) required
      */
-    public static function apply(iterable $items, callable $applyFunc): void
-    {
+    public static function apply(iterable $items, callable $applyFunc): void{
         foreach ($items as $key => $item) {
             $res = $applyFunc($key, $item);
             if (!$res) {
@@ -157,8 +148,7 @@ class IterableHelper
      *
      * @return \Generator
      */
-    public static function filter(iterable $items, callable $predicate): \Generator
-    {
+    public static function filter(iterable $items, callable $predicate): \Generator{
         foreach ($items as $key => $item) {
             if ($predicate($key, $item)) {
                 yield $item;
@@ -176,8 +166,7 @@ class IterableHelper
      *
      * @return array
      */
-    public static function toArray(iterable $items, callable $idFunc): array
-    {
+    public static function toArray(iterable $items, callable $idFunc): array{
         $res = [];
         foreach ($items as $key => $item) {
             $key = $idFunc($key, $item);
@@ -200,8 +189,7 @@ class IterableHelper
      *
      * @return mixed
      */
-    public static function reduce(iterable $items, callable $reduceFunc, $start)
-    {
+    public static function reduce(iterable $items, callable $reduceFunc, $start){
         foreach ($items as $key => $item) {
             $start = $reduceFunc($start, $key, $item);
         }
@@ -218,8 +206,7 @@ class IterableHelper
      *
      * @return \Generator
      */
-    public static function wrapBatch(iterable $items, int $batchSize): \Generator
-    {
+    public static function wrapBatch(iterable $items, int $batchSize): \Generator{
         $batchNum = 0;
         $batch    = [];
         $cnt      = 0;
@@ -252,8 +239,7 @@ class IterableHelper
     public static function batchApply(iterable $items,
                                       int $batchSize,
                                       callable $batchFunc,
-                                      callable $itemBiMapFunc = null): void
-    {
+                                      callable $itemBiMapFunc = null): void{
         $cnt      = 0;
         $batchNum = 0;
         $batch    = [];
